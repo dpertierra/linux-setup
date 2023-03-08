@@ -1,0 +1,7 @@
+zsh
+neovim
+git
+kitty
+flameshot
+steam
+
