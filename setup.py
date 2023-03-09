@@ -132,6 +132,7 @@ def install_flatpaks():
     packages = ' '.join(os.read('flatpaks.txt'))
     if packages:
         add_flathub()
+        os.system(f'flatpak install {packages} -y')
 
 
 def install_fonts():
