@@ -83,11 +83,12 @@ def update_system(package_manager):
 
 
 def install_packages(package_manager):
-    packages = ' '.join(os.read('packages.txt'))
-    for package in packages:
-        command = ['sudo', package_manager['package_manager'],
-                   *package_manager['install_args'], package]
-        subprocess.call(command)
+    with open('packages.txt', 'r') as f:
+        packages = f.read().splitlines()
+        packages = ' '.join(packages)
+    # for package in packages:
+    command = ['sudo', package_manager['package_manager'], *package_manager['install_args'], packages]
+    subprocess.call(command)
 
 
 def ask_for_zsh():
@@ -129,7 +130,9 @@ def add_flathub():
 
 
 def install_flatpaks():
-    packages = ' '.join(os.read('flatpaks.txt'))
+    with open('packages.txt', 'r') as f:
+        packages = f.read().splitlines()
+        packages = ' '.join(packages)
     if packages:
         add_flathub()
         os.system(f'flatpak install {packages} -y')
