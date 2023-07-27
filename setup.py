@@ -139,6 +139,7 @@ def install_flatpaks():
 
 
 def install_fonts():
+    os.system('cd ~')
     os.system('git clone https://github.com/ryanoasis/nerd-fonts.git --depth 1')
     os.system('cd nerd-fonts && ./install.sh')
 
