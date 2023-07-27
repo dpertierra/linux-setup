@@ -12,8 +12,9 @@ def main():
     if ask_for_nerd_fonts():
         install_fonts()
     if ask_for_chezmoi():
+        chezmoi_location = ask_chezmoi_location()
         github_username = input('Enter your GitHub username: ')
-        install_chezmoi_and_dotfiles(github_username)
+        install_chezmoi_and_dotfiles(github_username, chezmoi_location)
     if ask_for_flatpak():
         install_flatpaks()
 
@@ -88,7 +89,8 @@ def install_packages(package_manager):
         packages = ' '.join(packages)
     # for package in packages:
     command = ['sudo', package_manager['package_manager'], *package_manager['install_args'], packages]
-    subprocess.call(command)
+    command = ' '.join(command).strip()
+    os.system(command)
 
 
 def ask_for_zsh():
@@ -113,15 +115,21 @@ def ask_for_chezmoi():
     print('This will overwrite your current dotfiles')
     answer = input(
         'Do you want to install chezmoi and dotfiles? y/n: ').lower()
-    return True if answer == 'y' else False
+    return True if answer == 'y' or answer is None else False
 
+def ask_chezmoi_location():
+    print('Where do you want to install chezmoi?')
+    print('Recommended is system wide install at /bin')
+    print('But you can also install it in your home directory at ~/bin')
+    answer = input('Enter location L if you want to install it locally')
+    return '~/bin' if answer == 'L' else '/bin'
 
 def ask_for_flatpak():
     print('Do you want to install flatpaks?')
     print('This requires you to have a file called flatpaks.txt in the root of your dotfiles repo')
     print('This file should contain a list of flatpaks you want to install')
     answer = input('y/n: ').lower()
-    return True if answer == 'y' else False
+    return True if answer == 'y' or answer is None else False
 
 
 def add_flathub():
@@ -145,6 +153,7 @@ def install_fonts():
 
 
 def install_chezmoi_and_dotfiles(github_username):
+    os.system('cd ~')
     os.system(
         f'sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply {github_username}')
 
